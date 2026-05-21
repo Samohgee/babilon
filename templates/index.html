@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="/static/style.css">
+<title>Babilon AI</title>
+</head>
+<body>
+
+<div class="main">
+
+<div class="topbar">
+<h1>BABILON</h1>
+<a href="/logout">Logout</a>
+</div>
+
+<div id="chat" class="chat-window">
+<div class="msg ai">
+Babilon intelligence core online.
+Created by Samohgee.
+</div>
+</div>
+
+<div class="input-area">
+<input id="msg" placeholder="Query Babilon intelligence...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+</div>
+
+<script>
+const chat=document.getElementById("chat");
+
+async function sendMessage(){
+
+let msg=document.getElementById("msg").value;
+if(!msg)return;
+
+chat.innerHTML+=`<div class="msg user">${msg}</div>`;
+document.getElementById("msg").value="";
+
+let res=await fetch('/chat',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({message:msg})
+});
+
+let data=await res.json();
+
+typeResponse(data.response);
+}
+
+function typeResponse(text){
+
+let div=document.createElement("div");
+div.className="msg ai";
+chat.appendChild(div);
+
+let i=0;
+
+let interval=setInterval(()=>{
+div.innerHTML+=text.charAt(i);
+chat.scrollTop=chat.scrollHeight;
+i++;
+
+if(i>=text.length){
+clearInterval(interval);
+}
+},15);
+}
+
+document.getElementById("msg")
+.addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+sendMessage();
+}
+});
+</script>
+
+</body>
+</html>

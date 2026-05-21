@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Babilon</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="app">
+
+<div class="sidebar">
+<div class="logo">BABILON</div>
+
+<button class="new-chat">+ New Chat</button>
+
+<div class="nav-item">Chats</div>
+<div class="nav-item">History</div>
+<div class="nav-item">Bookmarks</div>
+<div class="nav-item">Settings</div>
+
+<div class="history">
+Recent Chats<br><br>
+Quantum Computing<br>
+Python Functions<br>
+Cyber Analysis<br>
+AI Systems
+</div>
+</div>
+
+<div class="chat-area">
+
+<div class="topbar">
+<div>Babilon intelligence core online ●</div>
+<a href="/logout" style="color:white;text-decoration:none;">Logout</a>
+</div>
+
+<div class="messages" id="chat">
+
+<div class="msg ai">
+Babilon intelligence core online. Created by Samohgee.<br><br>
+How can I help you today?
+</div>
+
+</div>
+
+<div class="input-box">
+<input id="msg" placeholder="Ask anything..." />
+<button class="send-btn" onclick="sendMsg()">➜</button>
+</div>
+
+</div>
+</div>
+
+<script>
+
+document.getElementById("msg").addEventListener("keypress",function(e){
+if(e.key==="Enter")sendMsg();
+});
+
+async function sendMsg(){
+
+let input=document.getElementById("msg");
+let msg=input.value.trim();
+
+if(!msg)return;
+
+let chat=document.getElementById("chat");
+
+chat.innerHTML+=`<div class="msg user">${msg}</div>`;
+input.value="";
+
+chat.scrollTop=chat.scrollHeight;
+
+let typing=document.createElement("div");
+typing.className="msg ai";
+typing.id="typing";
+typing.innerHTML="Thinking...";
+chat.appendChild(typing);
+
+let res=await fetch('/chat',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({message:msg})
+});
+
+let data=await res.json();
+
+document.getElementById("typing").remove();
+
+let div=document.createElement("div");
+div.className="msg ai";
+chat.appendChild(div);
+
+let i=0;
+
+let interval=setInterval(()=>{
+
+div.innerHTML+=data.response.charAt(i);
+chat.scrollTop=chat.scrollHeight;
+i++;
+
+if(i>=data.response.length){
+clearInterval(interval);
+}
+
+},15);
+
+}
+</script>
+
+</body>
+</html>

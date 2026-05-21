@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+
+<h1>Babilon Admin</h1>
+
+<h2>Users</h2>
+{% for u in users %}
+<div class="msg ai">{{u.username}}</div>
+{% endfor %}
+
+<h2>Chats</h2>
+{% for c in chats %}
+<div class="msg user">{{c.message}}</div>
+<div class="msg ai">{{c.response}}</div>
+{% endfor %}
+
+</body>
+</html>
